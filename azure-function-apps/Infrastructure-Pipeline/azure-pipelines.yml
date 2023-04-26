@@ -30,7 +30,7 @@ stages:
           inputs:
               provider: 'azurerm'
               command: 'init'
-              workingDirectory: '$(System.DefaultWorkingDirectory)/workspace/environment/${{ parameters.environment }}'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/azure-function-apps/workspace/environment/${{ parameters.environment }}'
               backendServiceArm: 'Service_Connection_NonProd' #please create this from Azure Devops using Azure Reosurce Manager
               backendAzureRmResourceGroupName: 'StorageAccount-ResourceGroup'
               backendAzureRmStorageAccountName: 'storageaccountname'
@@ -49,7 +49,7 @@ stages:
           inputs:
               provider: 'azurerm'
               command: 'plan'
-              workingDirectory: '$(System.DefaultWorkingDirectory)/workspace/environment/${{ parameters.environment }}'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/azure-function-apps/workspace/environment/${{ parameters.environment }}'
               environmentServiceNameAzureRM: 'Service_Connection_NonProd'
 
 - stage: Deploy_Infrastructure_on_${{ parameters.environment }}
@@ -68,5 +68,5 @@ stages:
                 inputs:
                     provider: 'azurerm'
                     command: 'apply'
-                    workingDirectory: '$(System.DefaultWorkingDirectory)/workspace/environment/${{ parameters.environment }}'
+                    workingDirectory: '$(System.DefaultWorkingDirectory)/azure-function-apps/workspace/environment/${{ parameters.environment }}'
                     environmentServiceNameAzureRM: 'Service_Connection_NonProd'
