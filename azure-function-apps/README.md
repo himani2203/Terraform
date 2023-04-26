@@ -31,3 +31,26 @@ Note:  Elastic and Consumption SKUs (Y1, EP1, EP2, and EP3) are for use with Fun
   
   We can validate from ACR under Services, we have Webhooks, click on particular webhook created for function apps push event. Also for testing you can ping and see the  202 events.
 
+	Create service principal and assign AcrPush Role to it
+  File Reference: workspace\environment\development\main-acr-app.tf
+
+### Please Note: Once this once above code or Infrastructure is deployed, we can get the acr_username and acr_password from the state file which will help us to create Service Connection using Docker Registry from the other tab in Azure DevOps.
+
+	We can also test code locally by setting environment variables and are good to run terraform init/plan/apply just we need to traverse till workspace\environment\development where we have our *.tf files.
+
+Refer Link to see how to set env var:
+https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/service_principal_client_secret#configuring-the-service-principal-in-terraform
+
+
+However, we can create pipeline using existing yaml from Azure DevOps.
+
+File Reference: pipeline\azure-pipelines.yml
+
+	Once we have infrastructure ready, we can run deployment pipeline which will build our image and push to ACR.
+Location: https://github.com/himani2203/Deploy-Apps/blob/main/azure-function-apps/Pipelines-cloud/One-Click-Build-Deploy.yml
+
+	For this we will first create Service Connection using above Service principal username and password.
+	We can create pipeline using existing yaml(file location given above) and run which will push an image to ACR. 
+	We can now verify from webhooks to see push events.
+
+### Please Note: Function app will give application error once we deploy initially since there is no image:tag found in ACR. Once we have image pushed into ACR, we can refresh function default site url and validate the code.
