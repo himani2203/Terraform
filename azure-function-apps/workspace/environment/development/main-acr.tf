@@ -1,4 +1,4 @@
-module "service_endpoint" {
+module "acr_service_endpoint" {
   source = "../../modules/subnet-findby-service-endpoint"
 
   virtual_network = data.azurerm_virtual_network.network
@@ -48,7 +48,7 @@ resource "azurerm_container_registry" "acr" {
         ],
     ])
 
-    virtual_network = flatten([[for subnet in module.service_endpoint.subnet :
+    virtual_network = flatten([[for subnet in module.acr_service_endpoint.subnet :
         {
             action = "Allow"
             subnet_id = subnet.id

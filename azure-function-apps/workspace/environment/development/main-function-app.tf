@@ -5,6 +5,13 @@ module "storage_service_endpoint" {
   service_endpoint = "Microsoft.Storage"
 }
 
+module "web_service_endpoint" {
+  source = "../../modules/subnet-findby-service-endpoint"
+
+  virtual_network = data.azurerm_virtual_network.network
+  service_endpoint = "Microsoft.Web"
+}
+
 resource "azurerm_storage_account" "storage" {
   name                = replace(format("sacc-%s", local.name), "-", "")
 
@@ -61,6 +68,21 @@ resource "azurerm_linux_function_app" "function_app" {
         image_tag = var.environment.metadata.sequence
       }
     }
+
+    dynamic "ip_restriction" {
+      for_each = var.WhiteListedCIDRRange
+      content {
+        ip_address = ip_restriction.value
+      }
+    }
+
+    dynamic "ip_restriction" {
+      for_each = [for subnet in module.web_service_endpoint.subnet : subnet.id]
+      content {
+        virtual_virtual_network_subnet_id = ip_restriction.value
+      }
+    }
+
   }
 
   identity {
