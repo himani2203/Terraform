@@ -1,6 +1,8 @@
+#Assuming VNET is already created and have subnets
+
 data "azurerm_virtual_network" "network" {
-  name                = "vnet-dva2-npdev000"
-  resource_group_name = "rgrp-dva2-network"
+  name                = "vnet_name"
+  resource_group_name = "vnet_rg_name"
 }
 
 data "azurerm_client_config" "current" {}

@@ -13,7 +13,7 @@ resource = {
 
 environment = {
     metadata = {
-        source = "workspace/environment/development"
+        source = "azure-functions-apps/workspace/environment/development"
         contact = "himani.yadav@xyz.com"
 
         sequence = "000"
@@ -21,6 +21,6 @@ environment = {
     }
 }
 
-WhiteListedCIDRRange = [ "52.185.75.16/28" ]
+WhiteListedCIDRRange = [ "23.34.45.56/67" ] #Please add cidr ranges
 
 image = "flask"

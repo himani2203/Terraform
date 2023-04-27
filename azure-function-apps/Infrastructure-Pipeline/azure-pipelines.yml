@@ -1,9 +1,9 @@
 
 trigger:
-- main
+- none
 
 pool:
-  name: Azure-NP
+  name: pool_name  #make sure this pool have access to backend storage where we have tfstate file
 
 parameters:
   - name: environment
@@ -15,7 +15,7 @@ parameters:
 
 stages:
 - stage: Verify_Validate_${{ parameters.environment }}_IAC_Code
-  displayName: 'Verify and Validate${{ parameters.environment }} IAC_Code'
+  displayName: 'Verify and Validate${{ parameters.environment }} IAC Code'
   jobs:
     - job: Infrastructure_Verify_Validate
       displayName: Infrastructure_Verify_Validate
@@ -28,32 +28,32 @@ stages:
         - task : TerraformTaskV4@4
           displayName: 'Terraform Init'
           inputs:
-              provider: 'azurerm'
-              command: 'init'
-              workingDirectory: '$(System.DefaultWorkingDirectory)/azure-function-apps/workspace/environment/${{ parameters.environment }}'
-              backendServiceArm: 'Service_Connection_NonProd' #please create this from Azure Devops using Azure Reosurce Manager
-              backendAzureRmResourceGroupName: 'StorageAccount-ResourceGroup'
-              backendAzureRmStorageAccountName: 'storageaccountname'
-              backendAzureRmContainerName: 'terraform-state'
-              backendAzureRmKey: 'dva2-npdev000.tfstate'
+            provider: 'azurerm'
+            command: 'init'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/azure-function-apps/workspace/environment/${{ parameters.environment }}'
+            backendServiceArm: 'Service_Connection_NonProd' #please create this from Azure Devops using Azure Resource Manager
+            backendAzureRmResourceGroupName: 'StorageAccount-ResourceGroup'
+            backendAzureRmStorageAccountName: 'storageaccountname'
+            backendAzureRmContainerName: 'terraform-state'
+            backendAzureRmKey: 'dva2-npdev000.tfstate'
 
         - task : TerraformTaskV4@4
           displayName: 'Terraform Validate'
           inputs:
-              provider: 'azurerm'
-              command: 'validate'
+            provider: 'azurerm'
+            command: 'validate'
 
         - task : TerraformTaskV4@4
           displayName: 'Terraform Plan'
           condition: succeeded()
           inputs:
-              provider: 'azurerm'
-              command: 'plan'
-              workingDirectory: '$(System.DefaultWorkingDirectory)/azure-function-apps/workspace/environment/${{ parameters.environment }}'
-              environmentServiceNameAzureRM: 'Service_Connection_NonProd'
+            provider: 'azurerm'
+            command: 'plan'
+            workingDirectory: '$(System.DefaultWorkingDirectory)/azure-function-apps/workspace/environment/${{ parameters.environment }}'
+            environmentServiceNameAzureRM: 'Service_Connection_NonProd'
 
 - stage: Deploy_Infrastructure_on_${{ parameters.environment }}
-  displayName: 'Deploy_Infrastructure_on_${{ parameters.environment }}'
+  displayName: 'Deploy Infrastructure on ${{ parameters.environment }}'
   condition: succeeded('Verify_Validate_${{ parameters.environment }}_IAC_Code')
   jobs:
     - deployment: Deploy_Infrastructure
@@ -64,9 +64,9 @@ stages:
           deploy:
             steps:
               - task : TerraformTaskV4@4
-                displayName: 'Terraform Plan'
+                displayName: 'Terraform Apply'
                 inputs:
-                    provider: 'azurerm'
-                    command: 'apply'
-                    workingDirectory: '$(System.DefaultWorkingDirectory)/azure-function-apps/workspace/environment/${{ parameters.environment }}'
-                    environmentServiceNameAzureRM: 'Service_Connection_NonProd'
+                  provider: 'azurerm'
+                  command: 'apply'
+                  workingDirectory: '$(System.DefaultWorkingDirectory)/azure-function-apps/workspace/environment/${{ parameters.environment }}'
+                  environmentServiceNameAzureRM: 'Service_Connection_NonProd'

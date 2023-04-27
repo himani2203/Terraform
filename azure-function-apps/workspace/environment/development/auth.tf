@@ -7,17 +7,33 @@ terraform {
   }
 
   required_providers {
-    azuread = {
-      source = "hashicorp/azuread"
-      version = "2.31.0"
-    }
 
     azurerm = {
       source = "hashicorp/azurerm"
       version = "3.35.0"
     }
 
-  }
+    azuread = {
+      source = "hashicorp/azuread"
+      version = "2.31.0"
+    }
 
+  }
+ 
+  required_version = ">= 1.3.0, <=1.3.9"
 }
 
+provider "azuread" {
+}
+
+provider "azurerm" {
+  features {
+    virtual_machine {
+      delete_os_disk_on_deletion = true
+    }
+    key_vault {
+      purge_soft_delete_on_destroy = true
+      recover_soft_deleted_key_vaults = true
+    }
+  }
+}

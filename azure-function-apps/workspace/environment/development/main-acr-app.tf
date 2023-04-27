@@ -1,4 +1,4 @@
-#This is for Creating Service Connection using Docker regsitry
+#This Service Principal will be used for creating Service Connection using Docker regsitry in Azure DevOps
 
 resource "azuread_application" "acr_push" {
   display_name = "${azurerm_container_registry.acr}sp"
@@ -23,10 +23,10 @@ output "acr_password" {
   sensitive = true
 }
 
-#ACR Role to push Docker Image from Azure DevOps
+#ACR Role to push Docker Image from Azure DevOps Pipeline
 
-resource "azurerm_role_assignment" "example" {
+resource "azurerm_role_assignment" "acr_sp_push" {
   scope                = azurerm_container_registry.acr.id
   role_definition_name = "AcrPush"
-  principal_id         = dazuread_service_principal.acr_push.id
+  principal_id         = azuread_service_principal.acr_push.id
 }

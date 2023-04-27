@@ -14,6 +14,8 @@ resource "azurerm_container_registry" "acr" {
 
   sku                 = "Premium"
   admin_enabled       = false
+
+  export_policy_enabled = true
     
   georeplications {
     location                = "Central US"
@@ -30,7 +32,7 @@ resource "azurerm_container_registry" "acr" {
     enabled = true
   }
 
-  anonymous_pull_enabled = true
+  anonymous_pull_enabled = false
   public_network_access_enabled = true
   network_rule_bypass_option = "AzureServices"
 

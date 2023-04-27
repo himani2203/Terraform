@@ -33,7 +33,7 @@ resource "azurerm_service_plan" "asp_plan" {
   resource_group_name = azurerm_resource_group.resource_group.name
   location            = azurerm_resource_group.resource_group.location
   os_type             = "Linux"
-  sku_name            = "Y1"
+  sku_name            = "EP1"
 }
 
 resource "azurerm_linux_function_app" "function_app" {
@@ -49,6 +49,7 @@ resource "azurerm_linux_function_app" "function_app" {
 
   app_settings = {
     WEBSITES_PORT = 5000
+    WEBSITES_ENABLE_APP_SERVICE_STORAGE = true
   }
 
   site_config {
@@ -66,6 +67,8 @@ resource "azurerm_linux_function_app" "function_app" {
     type = "SystemAssigned"
   }
 }
+
+#Function App Role to pull image from ACR
 
 resource "azurerm_role_assignment" "acr_pull" {
   scope                = azurerm_container_registry.acr.id
