@@ -1,5 +1,11 @@
 #This Service Principal will be used for creating Service Connection using Docker regsitry in Azure DevOps
 
+#Please note our Enterprise Application must have below API Persmission to create SP and assign roles else it will throw 403 error (ApplicationsClient.BaseClient.Post(): unexpected status 403 with OData error: Authorization_RequestDenied:
+# Insufficient privileges to complete the operation.)
+#API NAME: Microsoft Graph
+#Claim Value: Application.ReadWrite.OwnedBy , Directory.Read.All, Application.Read.All
+
+
 resource "azuread_application" "acr_push" {
   display_name = "${azurerm_container_registry.acr.name}sp"
   owners       = [data.azurerm_client_config.current.object_id]
