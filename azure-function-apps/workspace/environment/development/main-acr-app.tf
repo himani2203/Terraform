@@ -1,7 +1,7 @@
 #This Service Principal will be used for creating Service Connection using Docker regsitry in Azure DevOps
 
 resource "azuread_application" "acr_push" {
-  display_name = "${azurerm_container_registry.acr}sp"
+  display_name = "${azurerm_container_registry.acr.name}sp"
   owners       = [data.azurerm_client_config.current.object_id]
 }
 
